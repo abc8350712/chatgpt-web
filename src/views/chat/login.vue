@@ -14,26 +14,50 @@ export default {
   },
   methods: {
     validateUsername() {
-      this.usernameError = this.username.length < 3 ? 'Username must be at least 3 characters' : ''
+      if (!this.username) {
+        this.usernameError = 'Username is required'
+        return false
+      }
+      return true
     },
 
     validateEmail() {
       const re = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/
-      this.emailError = re.test(this.email) ? '' : 'Please enter a valid email'
+      if (re.test(this.email)) {
+        this.emailError = ''
+        return true
+      }
+
+      this.emailError = 'Please enter a valid email'
+
+      return false
     },
     validatePassword() {
-      this.passwordError = this.password.length < 6 ? 'Password must be at least 6 characters' : ''
+      if (this.password < 6) {
+        this.passwordError = 'Password must be at least 6 characters'
+        return false
+      }
+      return true
     },
     validateConfirmPassword() {
-      this.confirmPasswordError = this.confirmPassword !== this.password ? 'Passwords do not match' : ''
+      if (this.confirmPassword !== this.password) {
+        this.confirmPasswordError = 'Passwords do not match'
+        return false
+      }
+      return true
     },
     handleSubmit() {
       this.validateUsername()
       this.validateEmail()
       this.validatePassword()
       this.validateConfirmPassword()
-      this.$router.push({ name: '/' })
-
+      if (
+        this.validateUsername()
+        && this.validateEmail()
+        && this.validatePassword()
+        && this.validateConfirmPassword()
+      )
+        this.$router.push({ path: '/login' })
       // console.log("Username:", this.username);
       // console.log("Email:", this.email);
       // console.log("Password:", this.password);
