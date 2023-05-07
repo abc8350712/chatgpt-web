@@ -16,6 +16,7 @@ export default {
     validateUsername() {
       this.usernameError = this.username.length < 3 ? 'Username must be at least 3 characters' : ''
     },
+
     validateEmail() {
       const re = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/
       this.emailError = re.test(this.email) ? '' : 'Please enter a valid email'
@@ -31,6 +32,8 @@ export default {
       this.validateEmail()
       this.validatePassword()
       this.validateConfirmPassword()
+      this.$router.push({ name: '/' })
+
       // console.log("Username:", this.username);
       // console.log("Email:", this.email);
       // console.log("Password:", this.password);
