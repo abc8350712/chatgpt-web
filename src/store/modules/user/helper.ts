@@ -1,3 +1,13 @@
+/*
+ * @Author: yxd3 abc8350712@gmail.com
+ * @Date: 2023-04-30 23:17:02
+ * @LastEditors: yxd3 abc8350712@gmail.com
+ * @LastEditTime: 2023-05-06 23:27:49
+ * @FilePath: /chatgpt-web/src/store/modules/user/helper.ts
+ * @Description:
+ *
+ * Copyright (c) 2023 by ${git_name_email}, All Rights Reserved.
+ */
 import { ss } from '@/utils/storage'
 
 const LOCAL_NAME = 'userStorage'
@@ -16,7 +26,7 @@ export function defaultSetting(): UserState {
   return {
     userInfo: {
       avatar: 'https://raw.githubusercontent.com/Chanzhaoyu/chatgpt-web/main/src/assets/avatar.jpg',
-      name: 'ChenZhaoYu',
+      name: 'Mr.Moon',
       description: 'Star on <a href="https://github.com/Chanzhaoyu/chatgpt-bot" class="text-blue-500" target="_blank" >GitHub</a>',
     },
   }
