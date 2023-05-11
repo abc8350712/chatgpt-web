@@ -2,7 +2,7 @@
  * @Author: yxd3 abc8350712@gmail.com
  * @Date: 2023-04-30 23:17:02
  * @LastEditors: yxd3 abc8350712@gmail.com
- * @LastEditTime: 2023-05-06 23:27:49
+ * @LastEditTime: 2023-05-09 22:34:21
  * @FilePath: /chatgpt-web/src/store/modules/user/helper.ts
  * @Description:
  *
@@ -16,6 +16,7 @@ export interface UserInfo {
   avatar: string
   name: string
   description: string
+  auth: boolean
 }
 
 export interface UserState {
@@ -26,8 +27,9 @@ export function defaultSetting(): UserState {
   return {
     userInfo: {
       avatar: 'https://raw.githubusercontent.com/Chanzhaoyu/chatgpt-web/main/src/assets/avatar.jpg',
-      name: 'Mr.Moon',
+      name: '游客',
       description: 'Star on <a href="https://github.com/Chanzhaoyu/chatgpt-bot" class="text-blue-500" target="_blank" >GitHub</a>',
+      auth: false,
     },
   }
 }

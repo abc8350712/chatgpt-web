@@ -1,3 +1,13 @@
+<!--
+ * @Author: yxd3 abc8350712@gmail.com
+ * @Date: 2023-04-30 23:17:02
+ * @LastEditors: yxd3 abc8350712@gmail.com
+ * @LastEditTime: 2023-05-08 23:56:44
+ * @FilePath: /chatgpt-web/src/views/chat/layout/sider/index.vue
+ * @Description:
+ *
+ * Copyright (c) 2023 by ${git_name_email}, All Rights Reserved.
+-->
 <script setup lang='ts'>
 import type { CSSProperties } from 'vue'
 import { computed, ref, watch } from 'vue'

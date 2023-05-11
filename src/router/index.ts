@@ -36,6 +36,12 @@ const routes: RouteRecordRaw[] = [
   },
 
   {
+    path: '/register',
+    name: 'register',
+    component: () => import('@/views/chat/register.vue'),
+  },
+
+  {
     path: '/login',
     name: 'login',
     component: () => import('@/views/chat/login.vue'),
