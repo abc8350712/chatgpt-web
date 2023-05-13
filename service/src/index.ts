@@ -40,7 +40,7 @@ router.post('/api/get_key/:key', async (req, res) => {
   res.status(200).json({ key, value })
 })
 
-router.post('/api/get_hash/:key', async (req, res) => {
+router.post('get_hash/:key', async (req, res) => {
   const key = req.params.key
   // console.log('ss===================')
   // console.log('Data:', data) // 输出获取到的数据
