@@ -1,5 +1,7 @@
 <script lang="ts">
+import axios from 'axios'
 import { useUserStore } from '@/store'
+
 const userStore = useUserStore()
 // const name = ref(userInfo.value.name ?? '')
 
@@ -13,6 +15,19 @@ export default {
     }
   },
   methods: {
+    async getHashByKey(username: string) {
+      const response = await axios.get(`http://localhost:3002/api/get_hash/${username}`)
+      // 检查数据是否存在，根据需要调整条件
+      if (response.data
+          && response.data.hash
+          && Object.keys(response.data.hash).length > 0)
+
+        return true
+
+      else
+
+        return false
+    },
     validateUsername() {
       if (!this.username) {
         this.usernameError = 'Username is required'
@@ -20,17 +35,28 @@ export default {
       }
       return true
     },
-    validatePassword() {
+    async validatePassword(username: string) {
       if (!this.password) {
         this.passwordError = 'Password is required'
         return false
       }
+      else {
+        const response = await axios.get(`http://localhost:3002/api/get_hash/${username}`)
+        const password = response.data.hash.password
+
+        if (this.password !== password) {
+          this.passwordError = 'Password is not match'
+          return false
+        }
+      }
+
       return true
     },
-    handleSubmit() {
-      if (this.validateUsername() && this.validatePassword())
+    async handleSubmit() {
+      if (this.validateUsername() && (await this.validatePassword(this.username)) && (await this.getHashByKey(this.username))) {
         userStore.updateUserInfo({ name: this.username, auth: true })
-      this.$router.push({ path: '/' })
+        this.$router.push({ path: '/' })
+      }
 
       // 在这里添加登录成功后需要执行的代码
     },
