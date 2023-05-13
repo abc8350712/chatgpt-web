@@ -58,6 +58,11 @@ export function fetchSession<T>() {
   })
 }
 
+export function fetchGetHash<T>(key: string) {
+  return post<T>({
+    url: `/api/get_hash/${key}`,
+  })
+}
 export function fetchVerify<T>(token: string) {
   return post<T>({
     url: '/verify',

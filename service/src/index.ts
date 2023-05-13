@@ -31,7 +31,7 @@ router.get('/api/data', async (req, res) => {
   res.status(200).json({ message: '/api/data call successful' })
 })
 
-router.get('/api/get_key/:key', async (req, res) => {
+router.post('/api/get_key/:key', async (req, res) => {
   const key = req.params.key
   // console.log('ss===================')
   // console.log('Data:', data) // 输出获取到的数据
@@ -40,12 +40,14 @@ router.get('/api/get_key/:key', async (req, res) => {
   res.status(200).json({ key, value })
 })
 
-router.get('/api/get_hash/:key', async (req, res) => {
+router.post('/api/get_hash/:key', async (req, res) => {
   const key = req.params.key
   // console.log('ss===================')
   // console.log('Data:', data) // 输出获取到的数据
   const hash = await client.hgetall(key)
-  res.status(200).json({ key, hash })
+  // res.status(200).json({ key, hash })
+
+  res.send({ status: 'Success', message: '', data: { key, hash } })
 })
 
 router.post('/api/register', async (req, res) => {

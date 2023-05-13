@@ -1,10 +1,18 @@
 <script lang="ts">
-import axios from 'axios'
 import { useUserStore } from '@/store'
+import { fetchGetHash } from '@/api'
 
 const userStore = useUserStore()
 // const name = ref(userInfo.value.name ?? '')
+interface HashResponse {
+  key: string
+  hash: {
+    username: string
+    email: string
+    password: string
 
+  }
+}
 export default {
   data() {
     return {
@@ -15,19 +23,6 @@ export default {
     }
   },
   methods: {
-    async getHashByKey(username: string) {
-      const response = await axios.get(`http://54.219.152.36:3002/api/get_hash/${username}`)
-      // 检查数据是否存在，根据需要调整条件
-      if (response.data
-          && response.data.hash
-          && Object.keys(response.data.hash).length > 0)
-
-        return true
-
-      else
-
-        return false
-    },
     validateUsername() {
       if (!this.username) {
         this.usernameError = 'Username is required'
@@ -41,9 +36,10 @@ export default {
         return false
       }
       else {
-        const response = await axios.get(`http://54.219.152.36:3002/api/get_hash/${username}`)
-        const password = response.data.hash.password
+        // const response = await axios.get(`http://54.219.152.36:3002/api/get_hash/${username}`)
 
+        const response = await fetchGetHash<HashResponse>(username)
+        const password = response.data.hash.password
         if (this.password !== password) {
           this.passwordError = 'Password is not match'
           return false
@@ -53,7 +49,7 @@ export default {
       return true
     },
     async handleSubmit() {
-      if (this.validateUsername() && (await this.validatePassword(this.username)) && (await this.getHashByKey(this.username))) {
+      if (this.validateUsername() && (await this.validatePassword(this.username))) {
         userStore.updateUserInfo({ name: this.username, auth: true })
         this.$router.push({ path: '/' })
       }
