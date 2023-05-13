@@ -16,7 +16,7 @@ export default {
   },
   methods: {
     async getHashByKey(username: string) {
-      const response = await axios.get(`http://localhost:3002/api/get_hash/${username}`)
+      const response = await axios.get(`http://siliai.de:3002/api/get_hash/${username}`)
       // 检查数据是否存在，根据需要调整条件
       if (response.data
           && response.data.hash
@@ -41,7 +41,7 @@ export default {
         return false
       }
       else {
-        const response = await axios.get(`http://localhost:3002/api/get_hash/${username}`)
+        const response = await axios.get(`http://siliai.de:3002/api/get_hash/${username}`)
         const password = response.data.hash.password
 
         if (this.password !== password) {

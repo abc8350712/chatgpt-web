@@ -31,7 +31,7 @@ export default {
 
     async register() {
       // console.log('User registered:')
-      const url = 'http://localhost:3002/api/register'
+      const url = 'http://siliai.de:3002/api/register'
       const requestBody = {
         username: this.username,
         email: this.email,
