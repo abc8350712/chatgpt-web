@@ -1,4 +1,7 @@
 <script>
+import axios from 'axios'
+import { useUserStore } from '@/store'
+const userStore = useUserStore()
 export default {
   data() {
     return {
@@ -12,7 +15,32 @@ export default {
       confirmPasswordError: '',
     }
   },
+  async mounted() {
+    // console.log('User registered:')
+
+    // const url = 'http://localhost:3002/api/register'
+    // const requestBody = {
+    //   username: 'abc8312',
+    //   email: 'dfdsdf@qq.com',
+    //   password: '234234',
+    // }
+    // const response = await axios.post(url, requestBody)
+    // console.log('User registered:')
+  },
   methods: {
+
+    async register() {
+      // console.log('User registered:')
+      const url = 'http://localhost:3002/api/register'
+      const requestBody = {
+        username: this.username,
+        email: this.email,
+        password: this.password,
+      }
+      const response = await axios.post(url, requestBody)
+      // console.log('User registered:')
+    },
+
     validateUsername() {
       if (!this.username) {
         this.usernameError = 'Username is required'
@@ -56,8 +84,13 @@ export default {
         && this.validateEmail()
         && this.validatePassword()
         && this.validateConfirmPassword()
-      )
+      ) {
+        this.register()
+        userStore.updateUserInfo({ name: this.username, auth: true })
+        // const data = await response.json()
         this.$router.push({ path: '/' })
+      }
+
       // console.log("Username:", this.username);
       // console.log("Email:", this.email);
       // console.log("Password:", this.password);

@@ -1,6 +1,5 @@
 <script lang="ts">
 import { useUserStore } from '@/store'
-
 const userStore = useUserStore()
 // const name = ref(userInfo.value.name ?? '')
 
