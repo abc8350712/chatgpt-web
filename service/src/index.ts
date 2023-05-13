@@ -130,8 +130,4 @@ app.use('/api', router)
 app.set('trust proxy', 1)
 app.use(cors())
 const port = 3002
-app.listen(port, '0.0.0.0', () => {
-  // #console.log(`Server is listening on http://0.0.0.0:${port}`)
-})
-
-app.listen(port, () => globalThis.console.log('Server is running on port 3002'))
+app.listen(port, '0.0.0.0', () => globalThis.console.log('Server is running on port 3002'))
