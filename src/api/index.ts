@@ -63,6 +63,14 @@ export function fetchGetHash<T>(key: string) {
     url: `/api/get_hash/${key}`,
   })
 }
+
+export function fetchRegister<T>(request_body) {
+  return post<T>({
+    url: '/api/register',
+    data: request_body,
+  })
+}
+
 export function fetchVerify<T>(token: string) {
   return post<T>({
     url: '/verify',

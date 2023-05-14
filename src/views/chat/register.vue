@@ -1,7 +1,18 @@
-<script>
-import axios from 'axios'
+<script lang="ts">
 import { useUserStore } from '@/store'
+import { fetchRegister } from '@/api'
+
 const userStore = useUserStore()
+
+interface HashResponse {
+  key: string
+  hash: {
+    username: string
+    email: string
+    password: string
+
+  }
+}
 export default {
   data() {
     return {
@@ -31,13 +42,13 @@ export default {
 
     async register() {
       // console.log('User registered:')
-      const url = 'http://54.219.152.36:3002/api/register'
       const requestBody = {
         username: this.username,
         email: this.email,
         password: this.password,
       }
-      const response = await axios.post(url, requestBody)
+      const response = await fetchRegister<HashResponse>(requestBody)
+
       // console.log('User registered:')
     },
 
