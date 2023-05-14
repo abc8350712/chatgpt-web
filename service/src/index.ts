@@ -1,5 +1,6 @@
 import util from 'util'
 import express from 'express'
+import cors from 'cors'
 import type { RequestProps } from './types'
 import type { ChatMessage } from './chatgpt'
 import { chatConfig, chatReplyProcess, currentModel } from './chatgpt'
@@ -11,6 +12,7 @@ const getAsync = util.promisify(client.get).bind(client)
 
 const app = express()
 const router = express.Router()
+app.use(cors())
 
 app.use(express.static('public'))
 app.use(express.json())
