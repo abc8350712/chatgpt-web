@@ -1,6 +1,5 @@
 import util from 'util'
 import express from 'express'
-import cors from 'cors'
 import type { RequestProps } from './types'
 import type { ChatMessage } from './chatgpt'
 import { chatConfig, chatReplyProcess, currentModel } from './chatgpt'
@@ -40,7 +39,7 @@ router.post('/api/get_key/:key', async (req, res) => {
   res.status(200).json({ key, value })
 })
 
-router.post('/api/get_hash/:key', async (req, res) => {
+router.post('/get_hash/:key', async (req, res) => {
   const key = req.params.key
   // console.log('ss===================')
   // console.log('Data:', data) // 输出获取到的数据
@@ -130,6 +129,5 @@ router.post('/verify', async (req, res) => {
 app.use('', router)
 app.use('/api', router)
 app.set('trust proxy', 1)
-app.use(cors())
 const port = 3002
 app.listen(port, '0.0.0.0', () => globalThis.console.log('Server is running on port 3002'))
