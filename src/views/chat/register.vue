@@ -5,13 +5,8 @@ import { fetchRegister } from '@/api'
 const userStore = useUserStore()
 
 interface HashResponse {
-  key: string
-  hash: {
-    username: string
-    email: string
-    password: string
-
-  }
+  message: string
+  isUsernameExists: boolean
 }
 export default {
   data() {
@@ -42,14 +37,11 @@ export default {
 
     async register() {
       // console.log('User registered:')
-      const requestBody = {
+      const response = await fetchRegister<HashResponse>(this.username, {
         username: this.username,
         email: this.email,
         password: this.password,
-      }
-      const response = await fetchRegister<HashResponse>(requestBody)
-
-      // console.log('User registered:')
+      })
     },
 
     validateUsername() {
@@ -72,10 +64,10 @@ export default {
       return false
     },
     validatePassword() {
-      if (this.password < 6) {
-        this.passwordError = 'Password must be at least 6 characters'
-        return false
-      }
+      // if (this.password < 6) {
+      //   this.passwordError = 'Password must be at least 6 characters'
+      //   return false
+      // }
       return true
     },
     validateConfirmPassword() {

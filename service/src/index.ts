@@ -51,18 +51,47 @@ router.post('/api/get_hash/:key', async (req, res) => {
   res.send({ status: 'Success', message: '', data: { key, hash } })
 })
 
-router.post('/api/register', async (req, res) => {
+router.post('/api/register/:key', async (req, res) => {
+  const key = req.params.key
   const { username, email, password } = req.body
-  // 为用户分配一个Redis key（例如，在递增计数器的基础上生成）
-  const userKey = username
-  // 使用 hmset 存储用户信息到 Redis hash
-  await client.hmset(username, {
-    username,
-    email,
-    password,
-  })
-  // 返回成功状态和创建的用户key
-  res.status(201).json({ message: 'User registered successfully', userKey })
+  // console.log('ss===================')
+  // console.log('Data:', data) // 输出获取到的数据
+  const hash = await client.hgetall(key)
+  // res.status(200).json({ key, hash })
+  const isUsernameExists = await client.exists(username)
+
+  if (isUsernameExists) {
+    res.send({ status: 'Success', message: '', data: { key, hash, isUsernameExists } })
+  }
+  else {
+    client.hmset(username, {
+      username,
+      email,
+      password,
+    })
+    res.send({ status: 'Success', message: '', data: { key, hash, isUsernameExists } })
+  }
+
+  // const username = req.params.username
+  // const email = req.params.email
+  // const password = req.params.password
+  // // 为用户分配一个Redis key（例如，在递增计数器的基础上生成）
+  // const userKey = username
+  // const isUsernameExists = await client.exists(userKey)
+
+  // // 使用 hmset 存储用户信息到 Redis hash
+  // if (isUsernameExists) {
+  //   // 返回错误状态和提示消息
+  //   res.send({ message: 'Username already exists. Please choose another one.', isUsernameExists })
+  // }
+  // else {
+  //   // client.hmset(username, {
+  //   //   username,
+  //   //   email,
+  //   //   password,
+  //   // })
+  //   res.send({ message: 'User registered successfully', isUsernameExists })
+  // }
 })
 
 router.post('/chat-process', [auth, limiter], async (req, res) => {

@@ -64,10 +64,10 @@ export function fetchGetHash<T>(key: string) {
   })
 }
 
-export function fetchRegister<T>(request_body) {
+export function fetchRegister<T>(username, requestBody) {
   return post<T>({
-    url: '/api/register',
-    data: request_body,
+    url: `/api/register/${username}`,
+    data: requestBody,
   })
 }
 
