@@ -1,8 +1,8 @@
 /*
  * @Author: yxd3 abc8350712@gmail.com
  * @Date: 2023-04-30 23:17:02
- * @LastEditors: yxd3 abc8350712@gmail.com
- * @LastEditTime: 2023-05-09 22:34:21
+ * @LastEditors: yxd abc8350712@gmail.com
+ * @LastEditTime: 2023-05-21 13:17:13
  * @FilePath: /chatgpt-web/src/store/modules/user/helper.ts
  * @Description:
  *
@@ -17,6 +17,8 @@ export interface UserInfo {
   name: string
   description: string
   auth: boolean
+  free_count: number
+  request_datetime: string
 }
 
 export interface UserState {
@@ -30,6 +32,8 @@ export function defaultSetting(): UserState {
       name: '游客',
       description: 'Star on <a href="https://github.com/Chanzhaoyu/chatgpt-bot" class="text-blue-500" target="_blank" >GitHub</a>',
       auth: false,
+      free_count: 0,
+      request_datetime: '',
     },
   }
 }

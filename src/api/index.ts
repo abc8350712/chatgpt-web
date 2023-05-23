@@ -1,3 +1,13 @@
+/*
+ * @Author: yxd abc8350712@gmail.com
+ * @Date: 2023-05-16 21:48:07
+ * @LastEditors: yxd abc8350712@gmail.com
+ * @LastEditTime: 2023-05-21 21:47:07
+ * @FilePath: /chatgpt-web/src/api/index.ts
+ * @Description:
+ *
+ * Copyright (c) 2023 by ${git_name_email}, All Rights Reserved.
+ */
 import type { AxiosProgressEvent, GenericAbortSignal } from 'axios'
 import { post } from '@/utils/request'
 import { useAuthStore, useSettingStore } from '@/store'
@@ -61,6 +71,18 @@ export function fetchSession<T>() {
 export function fetchGetHash<T>(key: string) {
   return post<T>({
     url: `/api/get_hash/${key}`,
+  })
+}
+
+export function fetchSecretKey<T>(key: string) {
+  return post<T>({
+    url: `/api/get_secret_key/${key}`,
+  })
+}
+
+export function fetchDecreasetChatCount<T>(key: string) {
+  return post<T>({
+    url: `/api/decrease_chat_count/${key}`,
   })
 }
 

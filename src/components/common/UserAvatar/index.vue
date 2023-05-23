@@ -1,3 +1,13 @@
+<!--
+ * @Author: yxd abc8350712@gmail.com
+ * @Date: 2023-04-30 23:17:02
+ * @LastEditors: yxd abc8350712@gmail.com
+ * @LastEditTime: 2023-05-20 23:06:10
+ * @FilePath: /chatgpt-web/src/components/common/UserAvatar/index.vue
+ * @Description:
+ *
+ * Copyright (c) 2023 by ${git_name_email}, All Rights Reserved.
+-->
 <script setup lang='ts'>
 import { useRouter } from 'vue-router'
 import { computed } from 'vue'

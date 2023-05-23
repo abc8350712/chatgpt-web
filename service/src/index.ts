@@ -51,6 +51,45 @@ router.post('/api/get_hash/:key', async (req, res) => {
   res.send({ status: 'Success', message: '', data: { key, hash } })
 })
 
+// 确认请求的secret_key是否存在
+router.post('/api/get_secret_key/:key', async (req, res) => {
+  const key = req.params.key
+  const hash = await client.hgetall(key)
+  const secret_key = hash.secret_key
+  // client = redis.createClient({ host: 'redis', port: 6379 })
+  // _secret_key 是redis的list的key
+  // 每个list的value是一个json
+  // json和格式为{
+  //  "cardID": "42767720-43a0-4eb1-ac59-a8b19e8f08fb",}
+  client.lrange('_secret_key', 0, -1, (err, reply) => {
+    if (err) {
+      res.status(500).send({ status: 'Error', message: err.message, data: {} })
+      return
+    }
+    const found = reply.some((item) => {
+      const parsedItem = JSON.parse(item)
+      return parsedItem.cardID === secret_key
+    })
+    if (found)
+      res.send({ status: 'Success', message: 'Secret found!', data: { isFound: found } })
+
+    else
+      res.status(404).send({ status: 'Failed', message: 'Secret key not found', data: { isFound: found } })
+  })
+})
+
+// 确认请求的secret_key是否存在
+router.post('/api/decrease_chat_count/:key', async (req, res) => {
+  const key = req.params.key
+  // console.log('ss===================')
+  // console.log('Data:', data) // 输出获取到的数据
+  const hash = await client.hgetall(key)
+  const free_count = hash.free_count
+
+  client.hset(key, 'free_count', (+(free_count) - 1).toString())
+  res.send({ status: 'Success', message: ' free_count decreasetd!', data: {} })
+})
+
 router.post('/api/register/:key', async (req, res) => {
   const key = req.params.key
   const { username, email, password } = req.body
@@ -71,27 +110,6 @@ router.post('/api/register/:key', async (req, res) => {
     })
     res.send({ status: 'Success', message: '', data: { key, hash, isUsernameExists } })
   }
-
-  // const username = req.params.username
-  // const email = req.params.email
-  // const password = req.params.password
-  // // 为用户分配一个Redis key（例如，在递增计数器的基础上生成）
-  // const userKey = username
-  // const isUsernameExists = await client.exists(userKey)
-
-  // // 使用 hmset 存储用户信息到 Redis hash
-  // if (isUsernameExists) {
-  //   // 返回错误状态和提示消息
-  //   res.send({ message: 'Username already exists. Please choose another one.', isUsernameExists })
-  // }
-  // else {
-  //   // client.hmset(username, {
-  //   //   username,
-  //   //   email,
-  //   //   password,
-  //   // })
-  //   res.send({ message: 'User registered successfully', isUsernameExists })
-  // }
 })
 
 router.post('/chat-process', [auth, limiter], async (req, res) => {

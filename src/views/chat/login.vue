@@ -1,6 +1,6 @@
 <script lang="ts">
 import { useUserStore } from '@/store'
-import { fetchGetHash } from '@/api'
+import { fetchGetHash, fetchSecretKey } from '@/api'
 
 const userStore = useUserStore()
 // const name = ref(userInfo.value.name ?? '')
@@ -10,7 +10,9 @@ interface HashResponse {
     username: string
     email: string
     password: string
-
+    free_count: string
+    secret_key: string
+    auth: boolean
   }
 }
 export default {
@@ -20,6 +22,9 @@ export default {
       password: '',
       usernameError: '',
       passwordError: '',
+      free_count: 0,
+      secret_key: '',
+      auth: false,
     }
   },
   methods: {
@@ -38,18 +43,21 @@ export default {
       else {
         // const response = await axios.get(`http://54.219.152.36:3002/api/get_hash/${username}`)
         const response = await fetchGetHash<HashResponse>(username)
+        const secret_response = await fetchSecretKey(username)
+        this.auth = secret_response.data.isFound
         const password = response.data.hash.password
+        this.free_count = +response.data.hash.free_count
+        this.secret_key = response.data.hash.secret_key
         if (this.password !== password) {
           this.passwordError = 'Password is not match'
           return false
         }
       }
-
       return true
     },
     async handleSubmit() {
       if (this.validateUsername() && (await this.validatePassword(this.username))) {
-        userStore.updateUserInfo({ name: this.username, auth: true })
+        userStore.updateUserInfo({ name: this.username, auth: this.auth, free_count: this.free_count })
         this.$router.push({ path: '/' })
       }
 

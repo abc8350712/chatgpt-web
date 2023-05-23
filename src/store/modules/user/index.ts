@@ -1,8 +1,8 @@
 /*
  * @Author: yxd3 abc8350712@gmail.com
  * @Date: 2023-04-30 23:17:02
- * @LastEditors: yxd3 abc8350712@gmail.com
- * @LastEditTime: 2023-05-09 22:21:44
+ * @LastEditors: yxd abc8350712@gmail.com
+ * @LastEditTime: 2023-05-21 16:18:53
  * @FilePath: /chatgpt-web/src/store/modules/user/index.ts
  * @Description:
  *
@@ -28,5 +28,13 @@ export const useUserStore = defineStore('user-store', {
     recordState() {
       setLocalState(this.$state)
     },
+
+    decreaseChatCount() {
+      if (this.userInfo.free_count <= 0)
+        return
+      this.userInfo.free_count -= 1
+      this.recordState()
+    },
+
   },
 })

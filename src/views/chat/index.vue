@@ -12,9 +12,13 @@ import { useUsingContext } from './hooks/useUsingContext'
 import HeaderComponent from './components/Header/index.vue'
 import { HoverButton, SvgIcon } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
-import { useChatStore, usePromptStore } from '@/store'
-import { fetchChatAPIProcess } from '@/api'
+import { useChatStore, usePromptStore, useUserStore } from '@/store'
+import { fetchChatAPIProcess, fetchDecreasetChatCount } from '@/api'
+
 import { t } from '@/locales'
+
+const userStore = useUserStore()
+const userInfo = computed(() => userStore.userInfo)
 
 let controller = new AbortController()
 
@@ -53,8 +57,11 @@ dataSources.value.forEach((item, index) => {
     updateChatSome(+uuid, index, { loading: false })
 })
 
-function handleSubmit() {
+async function handleSubmit() {
+  // yxd: 每次询问都会减少一次的 free_count
+  await fetchDecreasetChatCount(userInfo.value.name)
   onConversation()
+  userStore.decreaseChatCount()
 }
 
 async function onConversation() {

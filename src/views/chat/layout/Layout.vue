@@ -5,8 +5,10 @@ import { useRouter } from 'vue-router'
 import Sider from './sider/index.vue'
 import Permission from './Permission.vue'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
-import { useAppStore, useAuthStore, useChatStore } from '@/store'
+import { useAppStore, useAuthStore, useChatStore, useUserStore } from '@/store'
 
+const userStore = useUserStore()
+const userInfo = computed(() => userStore.userInfo)
 const router = useRouter()
 const appStore = useAppStore()
 const chatStore = useChatStore()
@@ -18,7 +20,10 @@ const { isMobile } = useBasicLayout()
 
 const collapsed = computed(() => appStore.siderCollapsed)
 
-const needPermission = computed(() => !!authStore.session?.auth && !authStore.token)
+// yxd: 用户的auth存在，且auth 为true
+// const needPermission = computed(() => !!authStore.session?.auth && !authStore.token)
+
+const needPermission = computed(() => userInfo.value.name !== '游客' && (userInfo.value.auth !== true || userInfo.value.free_count === 0))
 
 const getMobileClass = computed(() => {
   if (isMobile.value)
