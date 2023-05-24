@@ -43,7 +43,7 @@ export default {
       else {
         // const response = await axios.get(`http://54.219.152.36:3002/api/get_hash/${username}`)
         const response = await fetchGetHash<HashResponse>(username)
-        const secret_response = await fetchSecretKey(username)
+        const secret_response = await fetchSecretKey(response.data.hash.secret_key)
         this.auth = secret_response.data.isFound
         const password = response.data.hash.password
         this.free_count = +response.data.hash.free_count

@@ -23,7 +23,10 @@ const collapsed = computed(() => appStore.siderCollapsed)
 // yxd: 用户的auth存在，且auth 为true
 // const needPermission = computed(() => !!authStore.session?.auth && !authStore.token)
 
-const needPermission = computed(() => userInfo.value.name !== '游客' && (userInfo.value.auth !== true || userInfo.value.free_count === 0))
+const needPermission = computed(() => {
+  // console.log('count: ', userInfo.value.free_count)
+  return userInfo.value.name !== '游客' && (userInfo.value.auth !== true || userInfo.value.free_count === 0)
+})
 
 const getMobileClass = computed(() => {
   if (isMobile.value)

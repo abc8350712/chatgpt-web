@@ -53,9 +53,9 @@ router.post('/api/get_hash/:key', async (req, res) => {
 
 // 确认请求的secret_key是否存在
 router.post('/api/get_secret_key/:key', async (req, res) => {
-  const key = req.params.key
-  const hash = await client.hgetall(key)
-  const secret_key = hash.secret_key
+  const secret_key = req.params.key
+  // const hash = await client.hgetall(key)
+  // const secret_key = hash.secret_key
   // client = redis.createClient({ host: 'redis', port: 6379 })
   // _secret_key 是redis的list的key
   // 每个list的value是一个json
@@ -87,6 +87,17 @@ router.post('/api/decrease_chat_count/:key', async (req, res) => {
   const free_count = hash.free_count
 
   client.hset(key, 'free_count', (+(free_count) - 1).toString())
+  res.send({ status: 'Success', message: ' free_count decreasetd!', data: {} })
+})
+
+router.post('/api/increase_chat_count/:key', async (req, res) => {
+  const key = req.params.key
+  // console.log('ss===================')
+  // console.log('Data:', data) // 输出获取到的数据
+  const hash = await client.hgetall(key)
+  const free_count = hash.free_count
+
+  client.hset(key, 'free_count', (+(free_count) + 100).toString())
   res.send({ status: 'Success', message: ' free_count decreasetd!', data: {} })
 })
 

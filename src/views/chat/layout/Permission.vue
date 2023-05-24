@@ -1,8 +1,8 @@
 <script setup lang='ts'>
 import { computed, ref } from 'vue'
 import { NButton, NInput, NModal, useMessage } from 'naive-ui'
-import { fetchVerify } from '@/api'
-import { useAuthStore } from '@/store'
+import { fetchIncreasetChatCount, fetchSecretKey } from '@/api'
+import { useAuthStore, useUserStore } from '@/store'
 import Icon403 from '@/icons/403.vue'
 
 interface Props {
@@ -12,6 +12,8 @@ interface Props {
 defineProps<Props>()
 
 const authStore = useAuthStore()
+const userStore = useUserStore()
+const userInfo = computed(() => userStore.userInfo)
 
 const ms = useMessage()
 
@@ -27,11 +29,18 @@ async function handleVerify() {
     return
 
   try {
-    loading.value = true
-    await fetchVerify(secretKey)
-    authStore.setToken(secretKey)
-    ms.success('success')
+    // loading.value = true
+    // await fetchVerify(secretKey)
+    // authStore.setToken(secretKey)
+    // ms.success('success')
+    const secret_response = await fetchSecretKey(secretKey)
+    loading.value = secret_response.data.isFound
     window.location.reload()
+    if (loading.value) {
+      userStore.increaseChatCount(100)
+      await fetchIncreasetChatCount(userInfo.value.name)
+      userStore.updateUserInfo({ auth: true })
+    }
   }
   catch (error: any) {
     ms.error(error.message ?? 'error')
