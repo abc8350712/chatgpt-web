@@ -78,7 +78,6 @@ export default {
           v-model.trim="username"
           type="text"
           placeholder="Enter your username"
-          @blur="validateUsername"
         >
         <div v-if="usernameError" class="error">
           {{ usernameError }}
@@ -91,7 +90,6 @@ export default {
           v-model.trim="password"
           type="password"
           placeholder="Enter your password"
-          @blur="validatePassword"
         >
         <div v-if="passwordError" class="error">
           {{ passwordError }}
