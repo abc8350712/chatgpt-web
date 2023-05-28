@@ -18,6 +18,7 @@ import { isString } from '@/utils/is'
 
 const userStore = useUserStore()
 
+// computed()响应式计算
 const userInfo = computed(() => userStore.userInfo)
 
 const router = useRouter()

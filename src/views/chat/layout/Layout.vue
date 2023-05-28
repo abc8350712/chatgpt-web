@@ -1,3 +1,13 @@
+<!--
+ * @Author: yxd abc8350712@gmail.com
+ * @Date: 2023-05-23 21:45:27
+ * @LastEditors: yxd abc8350712@gmail.com
+ * @LastEditTime: 2023-05-27 12:36:47
+ * @FilePath: /chatgpt-web/src/views/chat/layout/Layout.vue
+ * @Description:
+ *
+ * Copyright (c) 2023 by ${git_name_email}, All Rights Reserved.
+-->
 <script setup lang='ts'>
 import { computed } from 'vue'
 import { NLayout, NLayoutContent } from 'naive-ui'
@@ -23,9 +33,12 @@ const collapsed = computed(() => appStore.siderCollapsed)
 // yxd: 用户的auth存在，且auth 为true
 // const needPermission = computed(() => !!authStore.session?.auth && !authStore.token)
 
+// 会员每天的次数与非会员不一样
+// 请求时，确认下当前时候与上次请求的的时间是否不在同一天，如果不在同一天，需要重置次数。
+// 请求时，确认下上次请求时间是否过期，如果过期，不用处理。确认下当前时间是否是过期，如果过期，重置远端的数据(如何只重置一次？)
 const needPermission = computed(() => {
   // console.log('count: ', userInfo.value.free_count)
-  return userInfo.value.name !== '游客' && (userInfo.value.auth !== true || userInfo.value.free_count === 0)
+  return userInfo.value.name !== '游客' && userInfo.value.free_count === 0
 })
 
 const getMobileClass = computed(() => {

@@ -2,7 +2,7 @@
  * @Author: yxd3 abc8350712@gmail.com
  * @Date: 2023-04-30 23:17:02
  * @LastEditors: yxd abc8350712@gmail.com
- * @LastEditTime: 2023-05-21 13:17:13
+ * @LastEditTime: 2023-05-27 11:02:52
  * @FilePath: /chatgpt-web/src/store/modules/user/helper.ts
  * @Description:
  *
@@ -19,6 +19,8 @@ export interface UserInfo {
   auth: boolean
   free_count: number
   request_datetime: string
+  expire_datetime: string
+
 }
 
 export interface UserState {
@@ -34,6 +36,7 @@ export function defaultSetting(): UserState {
       auth: false,
       free_count: 0,
       request_datetime: '',
+      expire_datetime: '',
     },
   }
 }

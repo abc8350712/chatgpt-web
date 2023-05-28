@@ -59,9 +59,10 @@ dataSources.value.forEach((item, index) => {
 
 async function handleSubmit() {
   // yxd: 每次询问都会减少一次的 free_count
-  await fetchDecreasetChatCount(userInfo.value.name)
+  const response = await fetchDecreasetChatCount(userInfo.value.name)
+  // await fetchUpdateRequesTime()
   onConversation()
-  userStore.decreaseChatCount()
+  userStore.updateChatCount(response.data.count)
 }
 
 async function onConversation() {

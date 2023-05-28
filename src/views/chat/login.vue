@@ -1,6 +1,6 @@
 <script lang="ts">
 import { useUserStore } from '@/store'
-import { fetchGetHash, fetchSecretKey } from '@/api'
+import { fetchGetHash } from '@/api'
 
 const userStore = useUserStore()
 // const name = ref(userInfo.value.name ?? '')
@@ -13,6 +13,7 @@ interface HashResponse {
     free_count: string
     secret_key: string
     auth: boolean
+    expire_datetime: string
   }
 }
 export default {
@@ -25,6 +26,7 @@ export default {
       free_count: 0,
       secret_key: '',
       auth: false,
+      expire_datetime: '',
     }
   },
   methods: {
@@ -42,22 +44,27 @@ export default {
       }
       else {
         // const response = await axios.get(`http://54.219.152.36:3002/api/get_hash/${username}`)
+
         const response = await fetchGetHash<HashResponse>(username)
-        const secret_response = await fetchSecretKey(response.data.hash.secret_key)
-        this.auth = secret_response.data.isFound
+        // const secret_response = await fetchSecretKey(response.data.hash.secret_key)
+        if (response.data.hash === null || response.data.hash === undefined)
+          return
+        this.auth = true
         const password = response.data.hash.password
         this.free_count = +response.data.hash.free_count
+        this.expire_datetime = response.data.hash.expire_datetime
         this.secret_key = response.data.hash.secret_key
         if (this.password !== password) {
           this.passwordError = 'Password is not match'
           return false
         }
       }
+
       return true
     },
     async handleSubmit() {
       if (this.validateUsername() && (await this.validatePassword(this.username))) {
-        userStore.updateUserInfo({ name: this.username, auth: this.auth, free_count: this.free_count })
+        userStore.updateUserInfo({ name: this.username, auth: this.auth, free_count: this.free_count, expire_datetime: this.expire_datetime })
         this.$router.push({ path: '/' })
       }
 

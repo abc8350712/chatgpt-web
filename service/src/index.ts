@@ -53,7 +53,10 @@ router.post('/api/get_hash/:key', async (req, res) => {
 
 // 确认请求的secret_key是否存在
 router.post('/api/get_secret_key/:key', async (req, res) => {
+  // const key = req.params
+  // const { name, secret_key } = req.body
   const secret_key = req.params.key
+
   // const hash = await client.hgetall(key)
   // const secret_key = hash.secret_key
   // client = redis.createClient({ host: 'redis', port: 6379 })
@@ -70,11 +73,36 @@ router.post('/api/get_secret_key/:key', async (req, res) => {
       const parsedItem = JSON.parse(item)
       return parsedItem.cardID === secret_key
     })
-    if (found)
-      res.send({ status: 'Success', message: 'Secret found!', data: { isFound: found } })
+    if (found) {
+      const key = 'yxd'
+      const field = 'expire_datetime'
+      const daysToAdd = 30
 
-    else
-      res.status(404).send({ status: 'Failed', message: 'Secret key not found', data: { isFound: found } })
+      client.hget(key, field, (err, value) => {
+        if (err) {
+          console.error('Error:', err)
+          return
+        }
+        let newExpireDate
+        if (value === null) {
+          // 如果不存在expire_datetime，将其设置为当前日期加30天
+          newExpireDate = new Date()
+          newExpireDate.setDate(newExpireDate.getDate() + daysToAdd)
+        }
+        else {
+          // 如果已存在expire_datetime，为其添加30天
+          newExpireDate = new Date(value)
+          newExpireDate.setDate(newExpireDate.getDate() + daysToAdd)
+        }
+        // 更新expire_datetime
+        client.hmset(key, field, newExpireDate.toISOString(), () => {
+          client.quit()
+        })
+      })
+      res.send({ status: 'Success', message: 'Secret found!', data: { isFound: found } })
+    }
+
+    else { res.status(404).send({ status: 'Failed', message: 'Secret key not found', data: { isFound: found } }) }
   })
 })
 
@@ -84,9 +112,39 @@ router.post('/api/decrease_chat_count/:key', async (req, res) => {
   // console.log('ss===================')
   // console.log('Data:', data) // 输出获取到的数据
   const hash = await client.hgetall(key)
-  const free_count = hash.free_count
+  let free_count = hash.free_count
 
-  client.hset(key, 'free_count', (+(free_count) - 1).toString())
+  const requestTimeString = hash.request_time
+  const requestTime = new Date(requestTimeString)
+  const nowTime = new Date()
+  const expire_datetime_string = hash.expire_datetime
+  const expire_datetime = new Date(expire_datetime_string)
+
+  function areDatesInSameDay(date1, date2) {
+    return date1.getFullYear() === date2.getFullYear()
+      && date1.getMonth() === date2.getMonth()
+      && date1.getDate() === date2.getDate()
+  }
+  const isSameDay = areDatesInSameDay(requestTime, nowTime)
+  if (!isSameDay) {
+    if (nowTime < expire_datetime)
+      free_count = await client.get('_pay_count')
+
+    else
+      free_count = await client.get('_free_count')
+  }
+  if (+free_count === 0)
+    res.send({ status: 'Success', message: ' free_count decreasetd!', data: { count: 0 } })
+  const count = +(free_count) - 1
+
+  client.hset(key, 'free_count', count.toString())
+  client.hset(key, 'request_time', (new Date()).toISOString())
+
+  res.send({ status: 'Success', message: ' free_count decreasetd!', data: { count } })
+})
+
+router.post('/api/update_request_time', async (req, res) => {
+  client.hset('request_time', (new Date()).toString())
   res.send({ status: 'Success', message: ' free_count decreasetd!', data: {} })
 })
 

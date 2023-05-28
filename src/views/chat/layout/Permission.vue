@@ -33,6 +33,7 @@ async function handleVerify() {
     // await fetchVerify(secretKey)
     // authStore.setToken(secretKey)
     // ms.success('success')
+    const user_name = userInfo.value.name
     const secret_response = await fetchSecretKey(secretKey)
     loading.value = secret_response.data.isFound
     window.location.reload()

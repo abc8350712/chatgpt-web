@@ -2,7 +2,7 @@
  * @Author: yxd abc8350712@gmail.com
  * @Date: 2023-05-16 21:48:07
  * @LastEditors: yxd abc8350712@gmail.com
- * @LastEditTime: 2023-05-24 23:24:15
+ * @LastEditTime: 2023-05-28 11:52:36
  * @FilePath: /chatgpt-web/src/api/index.ts
  * @Description:
  *
@@ -83,6 +83,12 @@ export function fetchSecretKey<T>(key: string) {
 export function fetchDecreasetChatCount<T>(key: string) {
   return post<T>({
     url: `/api/decrease_chat_count/${key}`,
+  })
+}
+
+export function fetchUpdateRequesTime<T>() {
+  return post<T>({
+    url: '/api/update_request_time',
   })
 }
 
