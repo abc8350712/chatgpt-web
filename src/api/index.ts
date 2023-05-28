@@ -2,7 +2,7 @@
  * @Author: yxd abc8350712@gmail.com
  * @Date: 2023-05-16 21:48:07
  * @LastEditors: yxd abc8350712@gmail.com
- * @LastEditTime: 2023-05-28 11:52:36
+ * @LastEditTime: 2023-05-28 13:41:48
  * @FilePath: /chatgpt-web/src/api/index.ts
  * @Description:
  *
@@ -74,9 +74,13 @@ export function fetchGetHash<T>(key: string) {
   })
 }
 
-export function fetchSecretKey<T>(key: string) {
+export function fetchSecretKey<T>(name: string, key: string) {
   return post<T>({
-    url: `/api/get_secret_key/${key}`,
+    url: `/api/get_secret_key/${name}/${key}`,
+    data: {
+      name,
+      key,
+    },
   })
 }
 

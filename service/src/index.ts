@@ -52,10 +52,13 @@ router.post('/api/get_hash/:key', async (req, res) => {
 })
 
 // 确认请求的secret_key是否存在
-router.post('/api/get_secret_key/:key', async (req, res) => {
+router.post('/api/get_secret_key/:name/:key', async (req, res) => {
   // const key = req.params
   // const { name, secret_key } = req.body
   const secret_key = req.params.key
+  const key = req.params.name
+
+  // const { _, secret_key } = req.body
 
   // const hash = await client.hgetall(key)
   // const secret_key = hash.secret_key
@@ -74,7 +77,7 @@ router.post('/api/get_secret_key/:key', async (req, res) => {
       return parsedItem.cardID === secret_key
     })
     if (found) {
-      const key = 'yxd'
+      // const key = 'yxd'
       const field = 'expire_datetime'
       const daysToAdd = 30
 
