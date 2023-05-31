@@ -170,7 +170,10 @@ router.post('/api/register/:key', async (req, res) => {
   const hash = await client.hgetall(key)
   // res.status(200).json({ key, hash })
   const isUsernameExists = await client.exists(username)
-
+  const request_time = (new Date()).toISOString()
+  const expire_time = (new Date()).toISOString()
+  const auth = '0'
+  const free_count = '5'
   if (isUsernameExists) {
     res.send({ status: 'Success', message: '', data: { key, hash, isUsernameExists } })
   }
@@ -179,6 +182,10 @@ router.post('/api/register/:key', async (req, res) => {
       username,
       email,
       password,
+      request_time,
+      expire_time,
+      auth,
+      free_count,
     })
     res.send({ status: 'Success', message: '', data: { key, hash, isUsernameExists } })
   }

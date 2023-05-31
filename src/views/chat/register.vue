@@ -19,6 +19,8 @@ export default {
       emailError: '',
       passwordError: '',
       confirmPasswordError: '',
+      requestTime: '',
+      expireTime: '',
     }
   },
   async mounted() {
@@ -89,7 +91,7 @@ export default {
         && this.validateConfirmPassword()
       ) {
         this.register()
-        userStore.updateUserInfo({ name: this.username, auth: true })
+        userStore.updateUserInfo({ name: this.username, auth: true, free_count: 5 })
         // const data = await response.json()
         this.$router.push({ path: '/' })
       }
