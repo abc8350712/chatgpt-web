@@ -99,7 +99,6 @@ router.post('/api/get_secret_key/:name/:key', async (req, res) => {
         }
         // 更新expire_datetime
         client.hmset(key, field, newExpireDate.toISOString(), () => {
-          client.quit()
         })
       })
       res.send({ status: 'Success', message: 'Secret found!', data: { isFound: found } })
@@ -136,14 +135,17 @@ router.post('/api/decrease_chat_count/:key', async (req, res) => {
     else
       free_count = await client.get('_free_count')
   }
-  if (+free_count === 0)
+  if (+free_count === 0) {
     res.send({ status: 'Success', message: ' free_count decreasetd!', data: { count: 0 } })
-  const count = +(free_count) - 1
+  }
+  else {
+    const count = +(free_count) - 1
 
-  client.hset(key, 'free_count', count.toString())
-  client.hset(key, 'request_time', (new Date()).toISOString())
+    client.hset(key, 'free_count', count.toString())
+    client.hset(key, 'request_time', (new Date()).toISOString())
 
-  res.send({ status: 'Success', message: ' free_count decreasetd!', data: { count } })
+    res.send({ status: 'Success', message: ' free_count decreasetd!', data: { count } })
+  }
 })
 
 router.post('/api/update_request_time', async (req, res) => {
