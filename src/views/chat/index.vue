@@ -16,6 +16,7 @@ import { useChatStore, usePromptStore, useUserStore } from '@/store'
 import { fetchChatAPIProcess, fetchDecreasetChatCount } from '@/api'
 
 import { t } from '@/locales'
+import { router } from '@/router'
 
 const userStore = useUserStore()
 const userInfo = computed(() => userStore.userInfo)
@@ -59,10 +60,15 @@ dataSources.value.forEach((item, index) => {
 
 async function handleSubmit() {
   // yxd: 每次询问都会减少一次的 free_count
-  const response = await fetchDecreasetChatCount(userInfo.value.name)
-  // await fetchUpdateRequesTime()
-  onConversation()
-  userStore.updateChatCount(response.data.count)
+  if (userInfo.value.name === '游客') {
+    router.push('/login')
+  }
+  else {
+    const response = await fetchDecreasetChatCount(userInfo.value.name)
+    // await fetchUpdateRequesTime()
+    onConversation()
+    userStore.updateChatCount(response.data.count)
+  }
 }
 
 async function onConversation() {

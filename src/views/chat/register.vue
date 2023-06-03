@@ -107,7 +107,6 @@ export default {
 
 <template>
   <div class="register-container">
-    <h2>Register</h2>
     <form @submit.prevent="handleSubmit">
       <div class="form-item">
         <label for="username">Username</label>

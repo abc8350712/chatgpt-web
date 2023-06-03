@@ -105,11 +105,15 @@ export default {
       <button class="login-button" type="submit">
         Login
       </button>
+      <span class="register-text" style="color: red;"><a href="/register">还没注册？</a></span>
     </form>
   </div>
 </template>
 
 <style scoped>
+.register-text {
+  margin-left: 10px;
+}
 .login-container {
   max-width: 400px;
   margin: 0 auto;
