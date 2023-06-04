@@ -1,9 +1,20 @@
+<!--
+ * @Author: yxd abc8350712@gmail.com
+ * @Date: 2023-04-30 23:17:02
+ * @LastEditors: yxd abc8350712@gmail.com
+ * @LastEditTime: 2023-06-04 12:50:39
+ * @FilePath: /chatgpt-web/src/components/common/Setting/index.vue
+ * @Description:
+ *
+ * Copyright (c) 2023 by ${git_name_email}, All Rights Reserved.
+-->
 <script setup lang='ts'>
 import { computed, ref } from 'vue'
 import { NModal, NTabPane, NTabs } from 'naive-ui'
 import General from './General.vue'
 import Advanced from './Advanced.vue'
 import About from './About.vue'
+import Personl from './Personal.vue'
 import { useAuthStore } from '@/store'
 import { SvgIcon } from '@/components/common'
 
@@ -39,6 +50,15 @@ const show = computed({
   <NModal v-model:show="show" :auto-focus="false" preset="card" style="width: 95%; max-width: 640px">
     <div>
       <NTabs v-model:value="active" type="line" animated>
+        <NTabPane name="Personal" tab="Personal">
+          <template #tab>
+            <SvgIcon class="text-lg" icon="ri:user-line" />
+            <span class="ml-2">个人信息</span>
+          </template>
+          <div class="min-h-[100px]">
+            <Personl />
+          </div>
+        </NTabPane>
         <NTabPane name="General" tab="General">
           <template #tab>
             <SvgIcon class="text-lg" icon="ri:file-user-line" />

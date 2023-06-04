@@ -2,7 +2,7 @@
  * @Author: yxd abc8350712@gmail.com
  * @Date: 2023-04-30 23:17:02
  * @LastEditors: yxd abc8350712@gmail.com
- * @LastEditTime: 2023-05-20 23:06:10
+ * @LastEditTime: 2023-06-04 16:40:50
  * @FilePath: /chatgpt-web/src/components/common/UserAvatar/index.vue
  * @Description:
  *
@@ -25,6 +25,8 @@ const router = useRouter()
 const goToRegister = () => {
   router.push('/register')
 }
+
+const isAuth = computed(() => new Date(userInfo.value.expire_datetime) > new Date())
 
 const goToLogin = () => {
   router.push('/login')
@@ -53,7 +55,7 @@ defineExpose({
     </div>
     <div class="flex-1 min-w-0 ml-2">
       <h2 class="overflow-hidden font-bold text-md text-ellipsis whitespace-nowrap">
-        {{ userInfo.name ?? 'Moon' }}
+        {{ userInfo.name ?? 'Moon' }}<span v-if="isAuth" class="member-badge">会员</span>
       </h2>
       <p v-if="!userInfo.auth" class="overflow-hidden ">
         <button ghost color="green" class="bg-green" @click="goToRegister">
@@ -72,3 +74,11 @@ defineExpose({
     </div>
   </div>
 </template>
+
+<style scoped>
+.member-badge {
+  font-size: 12px;
+  color: #ff9900;
+  margin-left: 5px;
+}
+</style>

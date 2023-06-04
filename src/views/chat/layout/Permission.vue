@@ -1,3 +1,13 @@
+<!--
+ * @Author: yxd abc8350712@gmail.com
+ * @Date: 2023-05-28 11:58:10
+ * @LastEditors: yxd abc8350712@gmail.com
+ * @LastEditTime: 2023-06-04 22:35:56
+ * @FilePath: /chatgpt-web/src/views/chat/layout/Permission.vue
+ * @Description:
+ *
+ * Copyright (c) 2023 by ${git_name_email}, All Rights Reserved.
+-->
 <script setup lang='ts'>
 import { computed, ref } from 'vue'
 import { NButton, NInput, NModal, useMessage } from 'naive-ui'
@@ -28,36 +38,26 @@ async function handleVerify() {
   if (!secretKey)
     return
 
-  try {
-    // loading.value = true
-    // await fetchVerify(secretKey)
-    // authStore.setToken(secretKey)
-    // ms.success('success')
-    const user_name = userInfo.value.name
-    const secret_response = await fetchSecretKey(user_name, secretKey)
-    loading.value = secret_response.data.isFound
-    window.location.reload()
-    if (loading.value) {
-      userStore.increaseChatCount(100)
-      await fetchIncreasetChatCount(userInfo.value.name)
-      userStore.updateUserInfo({ auth: true })
-    }
-  }
-  catch (error: any) {
-    ms.error(error.message ?? 'error')
-    authStore.removeToken()
-    token.value = ''
-  }
-  finally {
-    loading.value = false
-  }
+  // loading.value = true
+  // await fetchVerify(secretKey)
+  // authStore.setToken(secretKey)
+  // ms.success('success')
+  const user_name = userInfo.value.name
+  const secret_response = await fetchSecretKey(user_name, secretKey)
+  loading.value = secret_response.data.isFound
+  window.location.reload()
+  const newExpireDate = new Date()
+  newExpireDate.setDate(newExpireDate.getDate() + 30)
+
+  userStore.updateUserInfo({ auth: true, expire_datetime: newExpireDate.toISOString() })
+  userStore.increaseChatCount(100)
+  await fetchIncreasetChatCount(userInfo.value.name)
 }
 
 function handlePress(event: KeyboardEvent) {
-  if (event.key === 'Enter' && !event.shiftKey) {
+  if (event.key === 'Enter' && !event.shiftKey)
     event.preventDefault()
-    handleVerify()
-  }
+  handleVerify()
 }
 </script>
 
