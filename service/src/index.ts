@@ -176,21 +176,31 @@ router.post('/api/register/:key', async (req, res) => {
   const expire_time = (new Date()).toISOString()
   const auth = '0'
   const free_count = '5'
-  if (isUsernameExists) {
-    res.send({ status: 'Success', message: '', data: { key, hash, isUsernameExists } })
-  }
-  else {
-    client.hmset(username, {
-      username,
-      email,
-      password,
-      request_time,
-      expire_time,
-      auth,
-      free_count,
-    })
-    res.send({ status: 'Success', message: '', data: { key, hash, isUsernameExists } })
-  }
+  client.hexists('_email', email, (err, emailExists) => {
+    const isEmailExists = emailExists
+    if (err)
+      console.error('Error checking email:', err)
+    if (isUsernameExists || isEmailExists) {
+      res.send({ status: 'Success', message: '', data: { key, hash, isUsernameExists, isEmailExists } })
+    }
+    else {
+      client.hmset(username, {
+        username,
+        email,
+        password,
+        request_time,
+        expire_time,
+        auth,
+        free_count,
+      })
+
+      client.hmset('_email', {
+        [email]: username,
+      })
+      res.send({ status: 'Success', message: '', data: { key, hash, isUsernameExists, isEmailExists } })
+    }
+    // Close the connection when done.
+  })
 })
 
 router.post('/chat-process', [auth, limiter], async (req, res) => {

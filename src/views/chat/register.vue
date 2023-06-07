@@ -7,6 +7,7 @@ const userStore = useUserStore()
 interface HashResponse {
   message: string
   isUsernameExists: boolean
+  isEmailExists: boolean
 }
 export default {
   data() {
@@ -16,11 +17,15 @@ export default {
       password: '',
       confirmPassword: '',
       usernameError: '',
+      usernameExistsError: '',
       emailError: '',
+      emailExistsErrors: '',
       passwordError: '',
       confirmPasswordError: '',
       requestTime: '',
       expireTime: '',
+      isUserExists: 0,
+      isEmailExists: 0,
     }
   },
   async mounted() {
@@ -38,15 +43,21 @@ export default {
   methods: {
 
     async register() {
-      // console.log('User registered:')
       const response = await fetchRegister<HashResponse>(this.username, {
         username: this.username,
         email: this.email,
         password: this.password,
       })
+
+      // const { key, hash, isUsernameExists, isEmailExists } = response.data
+      // console.log('log', isUsernameExists, isEmailExists)
+      // this.isUserExists = isUsernameExists
+      // this.isEmailExists = isEmailExists
+      return response.data
     },
 
     validateUsername() {
+      // 还需要验证邮箱是否已经存在
       if (!this.username) {
         this.usernameError = 'Username is required'
         return false
@@ -55,6 +66,7 @@ export default {
     },
 
     validateEmail() {
+      // 需要验证邮箱是否已经存在
       const re = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/
       if (re.test(this.email)) {
         this.emailError = ''
@@ -79,7 +91,7 @@ export default {
       }
       return true
     },
-    handleSubmit() {
+    async handleSubmit() {
       this.validateUsername()
       this.validateEmail()
       this.validatePassword()
@@ -90,10 +102,23 @@ export default {
         && this.validatePassword()
         && this.validateConfirmPassword()
       ) {
-        this.register()
-        userStore.updateUserInfo({ name: this.username, auth: true, free_count: 5 })
-        // const data = await response.json()
-        this.$router.push({ path: '/' })
+        const response = await this.register()
+        this.isUserExists = response.isUsernameExists
+        this.isEmailExists = response.isEmailExists
+        if (this.isEmailExists)
+          this.emailExistsErrors = 'Email already exists !'
+        else
+          this.emailExistsErrors = ''
+        if (this.isUserExists)
+          this.usernameExistsError = 'User already exists !'
+        else this.usernameExistsError = ''
+
+        if (!this.isEmailExists && !this.isUserExists) {
+          userStore.updateUserInfo({ name: this.username, auth: true, free_count: 5 })
+          // const data = await response.json()
+          this.$router.push({ path: '/' },
+          )
+        }
       }
 
       // console.log("Username:", this.username);
@@ -117,12 +142,18 @@ export default {
         <div v-if="usernameError" class="error">
           {{ usernameError }}
         </div>
+        <div v-else-if="isUserExists" class="error">
+          {{ usernameExistsError }}
+        </div>
       </div>
       <div class="form-item">
         <label for="email">Email</label>
         <input id="email" v-model.trim="email" type="email" placeholder="Enter your email" @blur="validateEmail">
         <div v-if="emailError" class="error">
           {{ emailError }}
+        </div>
+        <div v-else-if="emailExistsErrors" class="error">
+          {{ emailExistsErrors }}
         </div>
       </div>
       <div class="form-item">
