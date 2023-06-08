@@ -2,7 +2,7 @@
  * @Author: yxd abc8350712@gmail.com
  * @Date: 2023-05-23 21:45:27
  * @LastEditors: yxd abc8350712@gmail.com
- * @LastEditTime: 2023-06-05 22:24:01
+ * @LastEditTime: 2023-06-08 21:53:30
  * @FilePath: /chatgpt-web/src/views/chat/layout/Layout.vue
  * @Description:
  *
@@ -38,7 +38,7 @@ const collapsed = computed(() => appStore.siderCollapsed)
 // 请求时，确认下上次请求时间是否过期，如果过期，不用处理。确认下当前时间是否是过期，如果过期，重置远端的数据(如何只重置一次？)
 const needPermission = computed(() => {
   // console.log('count: ', userInfo.value.free_count)
-  return userInfo.value.name !== '游客' && (userInfo.value.expire_datetime < new Date().toISOString())
+  return userInfo.value.name !== '游客' && userInfo.value.free_count === 0
 })
 
 const getMobileClass = computed(() => {

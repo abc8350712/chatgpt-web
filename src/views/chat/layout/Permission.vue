@@ -2,7 +2,7 @@
  * @Author: yxd abc8350712@gmail.com
  * @Date: 2023-05-28 11:58:10
  * @LastEditors: yxd abc8350712@gmail.com
- * @LastEditTime: 2023-06-04 22:35:56
+ * @LastEditTime: 2023-06-08 22:01:33
  * @FilePath: /chatgpt-web/src/views/chat/layout/Permission.vue
  * @Description:
  *
@@ -10,7 +10,7 @@
 -->
 <script setup lang='ts'>
 import { computed, ref } from 'vue'
-import { NButton, NInput, NModal, useMessage } from 'naive-ui'
+import { NButton, NInput, NModal, NText, useMessage } from 'naive-ui'
 import { fetchIncreasetChatCount, fetchSecretKey } from '@/api'
 import { useAuthStore, useUserStore } from '@/store'
 import Icon403 from '@/icons/403.vue'
@@ -24,6 +24,7 @@ defineProps<Props>()
 const authStore = useAuthStore()
 const userStore = useUserStore()
 const userInfo = computed(() => userStore.userInfo)
+const isExpired = computed(() => new Date(userInfo.value.expire_datetime) < new Date())
 
 const ms = useMessage()
 
@@ -72,9 +73,15 @@ function handlePress(event: KeyboardEvent) {
           <p class="text-base text-center text-slate-500 dark:text-slate-500">
             {{ $t('common.unauthorizedTips') }}
           </p>
+
           <Icon403 class="w-[200px] m-auto" />
         </header>
-        <NInput v-model:value="token" type="password" placeholder="" @keypress="handlePress" />
+        <NInput v-if="isExpired" v-model:value="token" type="password" placeholder="" @keypress="handlePress" />
+        <NText v-else>
+          <p class="text-base text-center text-slate-500 red:text-slate-500">
+            今日使用次数已达上限，请等明天。
+          </p>
+        </NText>
         <NButton
           block
           type="primary"
