@@ -2,7 +2,7 @@
  * @Author: yxd abc8350712@gmail.com
  * @Date: 2023-05-28 11:58:10
  * @LastEditors: yxd abc8350712@gmail.com
- * @LastEditTime: 2023-06-08 22:01:33
+ * @LastEditTime: 2023-06-11 00:13:56
  * @FilePath: /chatgpt-web/src/views/chat/layout/Permission.vue
  * @Description:
  *
@@ -10,9 +10,9 @@
 -->
 <script setup lang='ts'>
 import { computed, ref } from 'vue'
-import { NButton, NInput, NModal, NText, useMessage } from 'naive-ui'
+import { NButton, NInput, NModal, NText } from 'naive-ui'
 import { fetchIncreasetChatCount, fetchSecretKey } from '@/api'
-import { useAuthStore, useUserStore } from '@/store'
+import { useUserStore } from '@/store'
 import Icon403 from '@/icons/403.vue'
 
 interface Props {
@@ -21,12 +21,9 @@ interface Props {
 
 defineProps<Props>()
 
-const authStore = useAuthStore()
 const userStore = useUserStore()
 const userInfo = computed(() => userStore.userInfo)
-const isExpired = computed(() => new Date(userInfo.value.expire_datetime) < new Date())
-
-const ms = useMessage()
+const isAuth = computed(() => userInfo.value.expire_datetime > new Date().toISOString())
 
 const loading = ref(false)
 const token = ref('')
@@ -76,12 +73,22 @@ function handlePress(event: KeyboardEvent) {
 
           <Icon403 class="w-[200px] m-auto" />
         </header>
-        <NInput v-if="isExpired" v-model:value="token" type="password" placeholder="" @keypress="handlePress" />
-        <NText v-else>
-          <p class="text-base text-center text-slate-500 red:text-slate-500">
-            今日使用次数已达上限，请等明天。
-          </p>
-        </NText>
+        <!-- 如果是游客，次数到达的时候就需要输入key。  -->
+        <!-- 如果是会员 次数到达的时候显示使用次数到达上限，如果是过期的话就需要输入密钥 -->
+        <!-- userInfo.auth 这个判断的是登陆 -->
+        <span v-if="userInfo.auth">
+          <NInput v-if="!isAuth" v-model:value="token" type="password" placeholder="" @keypress="handlePress" />
+          <NText v-else>
+            <p class="text-base text-center text-slate-500 red:text-slate-500">
+              今日使用次数已达上限，请等明天。
+            </p>
+          </NText>
+        </span>
+        <span v-else>
+          <NInput v-model:value="token" type="password" placeholder="" @keypress="handlePress" />
+
+        </span>
+
         <NButton
           block
           type="primary"
