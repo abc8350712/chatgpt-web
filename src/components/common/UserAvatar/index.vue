@@ -2,7 +2,7 @@
  * @Author: yxd abc8350712@gmail.com
  * @Date: 2023-04-30 23:17:02
  * @LastEditors: yxd abc8350712@gmail.com
- * @LastEditTime: 2023-06-05 22:00:56
+ * @LastEditTime: 2023-06-08 22:09:55
  * @FilePath: /chatgpt-web/src/components/common/UserAvatar/index.vue
  * @Description:
  *
@@ -55,8 +55,11 @@ defineExpose({
     </div>
     <div class="flex-1 min-w-0 ml-2">
       <h2 class="overflow-hidden font-bold text-md text-ellipsis whitespace-nowrap">
-        {{ userInfo.name ?? 'Moon' }}<span v-if="isAuth" class="member-badge">会员</span>
-        <span v-else class="free-badge">免费用户</span>
+        {{ userInfo.name ?? 'Moon' }}
+        <span v-if="userInfo.auth">
+          <span v-if="isAuth" class="member-badge">会员</span>
+          <span v-else class="free-badge">免费用户</span>
+        </span>
       </h2>
       <p v-if="!userInfo.auth" class="overflow-hidden ">
         <button ghost color="green" class="bg-green" @click="goToRegister">
